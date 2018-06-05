@@ -2,13 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn import neighbors
-from sklearn.metrics import confusion_matrix, f1_score
+from sklearn.metrics import accuracy_score
 
 a = np.loadtxt('skin.txt',delimiter=',')
 n=0
 tra_errors = []
 te_errors = []
 tra_ks=[]
+p_tra_errors = []
+p_te_errors = []
 
 length = a.shape[0]
 for x in range(0,length):
@@ -55,10 +57,14 @@ tra_X = train[['variance', 'skewness', 'curtosis', 'entropy']]
 tra_Y = train[['class_']]
 te_X = test[['variance', 'skewness', 'curtosis', 'entropy']]
 te_Y = test[['class_']]
-
-# list_k = list(range(1,30,1))
+cov = np.cov(np.transpose(tra_X))
+i_cov = np.linalg.pinv(cov)
+# list_k = list(range(1,902,10))
 # for k in list_k:
-#     knn = neighbors.KNeighborsClassifier(n_neighbors=k)
+#     knn = neighbors.KNeighborsClassifier(n_neighbors=k, weights='distance')
+#     # knn = neighbors.KNeighborsClassifier(n_neighbors=k, metric='manhattan', weights='distance')
+#     # knn = neighbors.KNeighborsClassifier(n_neighbors=k, metric='chebyshev')
+#     # knn = neighbors.KNeighborsClassifier(n_neighbors=k, metric='mahalanobis', metric_params={'V': cov, 'VI': i_cov})
 #     knn.fit(tra_X, tra_Y.values.ravel())
 #     pred_tra_Y = knn.predict(tra_X)
 #     tra_err = 1-accuracy_score(tra_Y, pred_tra_Y)
@@ -71,6 +77,7 @@ te_Y = test[['class_']]
 #
 # print(tra_errors)
 # print(te_errors)
+# plt.title('weighted Euclidean')
 # plt.plot(tra_ks, tra_errors, 'r', label='training error')
 # plt.plot(tra_ks, te_errors, 'b', label='test error')
 # plt.xlabel('1/k')
@@ -78,8 +85,22 @@ te_Y = test[['class_']]
 # plt.legend()
 # plt.show()
 
-knn = neighbors.KNeighborsClassifier(n_neighbors=20)
-knn.fit(tra_X, tra_Y.values.ravel())
-pre_Y = knn.predict(te_X)
-print(confusion_matrix(te_Y, pre_Y))
-print(f1_score(te_Y, pre_Y))
+m = np.arange(0.1,1.1,0.1)
+p_list = 10**m
+for p in p_list:
+    knn = neighbors.KNeighborsClassifier(n_neighbors=1, metric='manhattan', p=p)
+    knn.fit(tra_X, tra_Y.values.ravel())
+    p_Y = knn.predict(tra_X)
+    p_tra_err = 1-accuracy_score(tra_Y, p_Y)
+    p_te_Y = knn.predict(te_X)
+    p_te_err = 1-accuracy_score(te_Y, p_te_Y)
+    p_tra_errors.append(p_tra_err)
+    p_te_errors.append(p_te_err)
+
+plt.figure()
+plt.plot(p_list, p_tra_errors, 'r', label='training error')
+plt.plot(p_list, p_te_errors, 'b', label='test error')
+plt.xlabel('value of p')
+plt.ylabel('error')
+plt.legend()
+plt.show()

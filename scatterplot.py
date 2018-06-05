@@ -19,6 +19,22 @@ ds = pd.DataFrame({
 # fig1 = sns.FacetGrid(data=ds, hue='class_')
 # fig1.map(plt.scatter, 'variance', 'curtosis').add_legend()
 # plt.show()
+#
+# fig2 = sns.FacetGrid(data=ds, hue='class_')
+# fig2.map(plt.scatter, 'variance', 'entropy').add_legend()
+# plt.show()
+#
+# fig3 = sns.FacetGrid(data=ds, hue='class_')
+# fig3.map(plt.scatter, 'skewness', 'curtosis').add_legend()
+# plt.show()
+#
+# fig4 = sns.FacetGrid(data=ds, hue='class_')
+# fig4.map(plt.scatter, 'skewness', 'entropy').add_legend()
+# plt.show()
+#
+# fig5 = sns.FacetGrid(data=ds, hue='class_')
+# fig5.map(plt.scatter, 'curtosis', 'entropy').add_legend()
+# plt.show()
 
 plt.figure()
 with sns.color_palette("husl", 2):
@@ -28,4 +44,14 @@ plt.show()
 plt.figure()
 with sns.color_palette("husl", 3):
     sns.boxplot(data=ds, hue='class_', x='class_', y='skewness')
+plt.show()
+
+plt.figure()
+with sns.color_palette("husl", 3):
+    sns.boxplot(data=ds, hue='class_', x='class_', y='curtosis')
+plt.show()
+
+plt.figure()
+with sns.color_palette("husl", 3):
+    sns.boxplot(data=ds, hue='class_', x='class_', y='entropy')
 plt.show()

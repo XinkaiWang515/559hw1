@@ -40,8 +40,6 @@ train0 = pd.DataFrame({
     'entropy': a[200:n,3],
     'class_': a[200:n,4],
 })
-# tra0_X = train0[['variance', 'skewness', 'curtosis', 'entropy']]
-# tra0_Y = train0[['class_']]
 
 train1 = pd.DataFrame({
     'variance': a[n+200:length,0],
@@ -50,8 +48,6 @@ train1 = pd.DataFrame({
     'entropy': a[n+200:length,3],
     'class_': a[n+200:length,4],
 })
-# tra1_X = train1[['variance', 'skewness', 'curtosis', 'entropy']]
-# tra1_Y = train1[['class_']]
 
 train = train0.merge(train1, how='outer')
 
@@ -60,31 +56,28 @@ tra_Y = train[['class_']]
 te_X = test[['variance', 'skewness', 'curtosis', 'entropy']]
 te_Y = test[['class_']]
 
-# knn = neighbors.KNeighborsClassifier(n_neighbors=20)
-# knn.fit(tra_X, tra_Y.values.ravel())
-# pre_Y = knn.predict(te_X)
-# print(confusion_matrix(te_Y, pre_Y))
 
 # N_list = list(range(50,901,50))
 # for N in N_list:
-N = 800
-d_train0 = train0.loc[0:N/2]
-d_train = d_train0.merge(train1.loc[0:N/2], how='outer')
-d_tra_X = d_train[['variance', 'skewness', 'curtosis', 'entropy']]
-d_tra_Y = d_train[['class_']]
-k_list = list(range(1,N,40))
-for d_k in k_list:
-    knn = neighbors.KNeighborsClassifier(n_neighbors=d_k)
-    # print(len(d_tra_Y.values.ravel()))
-    d_tra_err = knn.fit(d_tra_X, d_tra_Y.values.ravel()).score(d_tra_X, d_tra_Y.values.ravel())
-    knn.fit(d_tra_X, d_tra_Y.values.ravel())
-    pred_Y = knn.predict(te_X)
-    d_te_err = accuracy_score(te_Y, pred_Y)
-    d_tra_errors.append(d_tra_err)
-    d_te_errors.append(d_te_err)
+# N = 500
+# d_train0 = train0.loc[0:N/2]
+# d_train = d_train0.merge(train1.loc[0:N/2], how='outer')
+# d_tra_X = d_train[['variance', 'skewness', 'curtosis', 'entropy']]
+# d_tra_Y = d_train[['class_']]
+# k_list = list(range(1,N,40))
+# for d_k in k_list:
+#     knn = neighbors.KNeighborsClassifier(n_neighbors=d_k)
+#     # print(len(d_tra_Y.values.ravel()))
+#     d_tra_err = knn.fit(d_tra_X, d_tra_Y.values.ravel()).score(d_tra_X, d_tra_Y.values.ravel())
+#     knn.fit(d_tra_X, d_tra_Y.values.ravel())
+#     pred_Y = knn.predict(te_X)
+#     d_te_err = accuracy_score(te_Y, pred_Y)
+#     d_tra_errors.append(d_tra_err)
+#     d_te_errors.append(d_te_err)
 # plt.plot(k_list, d_tra_errors, 'r', label='training error')
 # plt.plot(k_list, d_te_errors, 'b', label='test error')
-
+#
+# plt.title('N is %i' % N)
 # plt.xlabel('value of k')
 # plt.ylabel('accuracy')
 # plt.legend()

@@ -45,3 +45,6 @@ train1 = pd.DataFrame({
 })
 
 train = train0.merge(train1, how='outer')
+
+print(test)
+print(train)
